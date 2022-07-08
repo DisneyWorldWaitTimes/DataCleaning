@@ -140,10 +140,9 @@ def combineMetadataAndUpdate(ride_files, ride_names):
     dateCleaning(all_rides)  # clean date columns
 
     all_rides['DATE'] = all_rides['date']
-    park_metadata['DATE'] = pd.to_datetime(park_metadata["DATE"])
 
-    combined_data = all_rides.merge(park_metadata, how="left", on="DATE")
-    combined_data = combined_data.drop(columns=['DATE'])
+    combined_data = pd.concat([all_rides, park_metadata], axis=1)
+    combined_data = combingited_data.drop(columns=['DATE'])
 
     return combined_data
 
@@ -167,10 +166,11 @@ def seperateYearsAndWriteToCSV(df, year):
     """
 
     df_year = df[df['date'].dt.year == year]
+    df_year.to_csv(f'../../data/interim/rideData{year}.csv')
 
-    months = {1: "jan", 2: "feb", 3: "mar", 4: "apr", 5: "may", 6: "jun",
-              7: "jul", 8: "aug", 9: "sept", 10: "oct", 11: "nov", 12: "dec"}
-
-    for x in range(1, 13):
-        df_month = df_year[df_year['date'].dt.month == x]
-        df_month.to_csv(f'../../data/interim/rideData{year}_{months[x]}.csv')
+    # months = {1: "jan", 2: "feb", 3: "mar", 4: "apr", 5: "may", 6: "jun",
+    #           7: "jul", 8: "aug", 9: "sept", 10: "oct", 11: "nov", 12: "dec"}
+    #
+    # for x in range(1, 13):
+    #     df_month = df_year[df_year['date'].dt.month == x]
+    #     df_month.to_csv(f'../../data/interim/rideData{year}_{months[x]}.csv')
